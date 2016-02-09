@@ -43,6 +43,7 @@ ActionMailer::Base.register_interceptor(PreventSomeEmails)
 
 class SidekiqMailerTest < Test::Unit::TestCase
   def setup
+    Object.send(:remove_const, :RedmineApp) if defined?(Object::RedmineApp)
     Sidekiq::Mailer.excluded_environments = []
     ActionMailer::Base.deliveries.clear
     Sidekiq::Mailer::Worker.jobs.clear

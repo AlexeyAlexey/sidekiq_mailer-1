@@ -4,7 +4,17 @@ class Sidekiq::Mailer::Proxy
   def initialize(mailer_class, method_name, *args)
     @mailer_class = mailer_class
     @method_name = method_name
-    *@args = *args
+    unless Sidekiq.server?
+      if defined?(RedmineApp)
+        class_constant = "Sidekiq::Mailer::BeforeFilter::#{mailer_class}".constantize
+        mailer_obj = class_constant.new
+        *@args = mailer_obj.send(method_name, args)
+      else
+        *@args = *args
+      end
+    else
+      *@args = *args
+    end
   end
 
   def actual_message
