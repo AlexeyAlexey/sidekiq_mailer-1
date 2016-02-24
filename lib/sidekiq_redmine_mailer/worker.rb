@@ -3,7 +3,7 @@ class Sidekiq::RedmineMailer::Worker
 
   def perform(mailer_class, action, params)
     if defined?(RedmineApp)
-      class_constant =  "RedmineSidekiq::RedmineMailer::AfterFilter::#{mailer_class}".constantize
+      class_constant =  "Sidekiq::RedmineMailer::AfterFilter::#{mailer_class}".constantize
       if class_constant.method_defined?(action.to_s)
         mailer_obj = class_constant.new
         params = mailer_obj.send(action, params)
