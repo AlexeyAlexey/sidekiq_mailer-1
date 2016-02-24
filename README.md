@@ -2,7 +2,7 @@
 
   
 ## Integration with [Redmine](https://github.com/redmine/redmine) 
-   copy from [sidekiq_mailer version "0.0.8"](https://github.com/andersondias/sidekiq_mailer)
+   Rewrites [sidekiq_mailer version "0.0.8"](https://github.com/andersondias/sidekiq_mailer) for redmine integration
 
 Adds to gem the ability convert args of methods to easy objects before write to queue and back after read from guegue but before send to method
 
