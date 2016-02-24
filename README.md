@@ -1,8 +1,8 @@
-# Sidekiq::Mailer
+# Sidekiq::RedmineMailer
 
-
+  
 ## Integration with [Redmine](https://github.com/redmine/redmine) 
-      (Alexey Kondratenko https://github.com/AlexeyAlexey  IAlexeyKondratenko@gmail.com)
+   copy from [sidekiq_mailer version "0.0.8"](https://github.com/andersondias/sidekiq_mailer)
 
 Adds to gem the ability convert args of methods to easy objects before write to queue and back after read from guegue but before send to method
 
@@ -11,10 +11,10 @@ Adds to gem the ability convert args of methods to easy objects before write to 
 
 
     ActionDispatch::Callbacks.to_prepare do
-      Mailer.send(:include, Sidekiq::Mailer)
+      Mailer.send(:include, Sidekiq::RedmineMailer)
       
       #before write to queue convert to easy objects
-      class Sidekiq::Mailer::BeforeFilter::Mailer
+      class Sidekiq::RedmineMailer::BeforeFilter::Mailer
         def issue_add(args)
           #args - array of method args 
           args.map{|a| a.is_a?(Array) ? (a.map(&:id))  : (a.id)}
@@ -25,7 +25,7 @@ Adds to gem the ability convert args of methods to easy objects before write to 
         end
       end
       #before send to method convert easy objects from queue to back 
-      class Sidekiq::Mailer::AfterFilter::Mailer
+      class Sidekiq::RedmineMailer::AfterFilter::Mailer
         def issue_add(params)
           #sleep 1
           i = 0
@@ -60,8 +60,8 @@ Adds to gem the ability convert args of methods to easy objects before write to 
     end
 
     #You cane override method use_sidekiq_mailer?
-    #this method turn on/off Sidekiq::Mailer 
-    class Sidekiq::Mailer::UseSidekiqMailer
+    #this method turn on/off Sidekiq::RedmineMailer 
+    class Sidekiq::RedmineMailer::UseSidekiqMailer
       def use_sidekiq_mailer?
         true #true/false  defaulte true
       end
@@ -71,14 +71,14 @@ Adds to gem the ability convert args of methods to easy objects before write to 
 
 
 
-Sidekiq::Mailer adds to your ActionMailer classes the ability to send mails asynchronously.
+Sidekiq::RedmineMailer adds to your ActionMailer classes the ability to send mails asynchronously.
 
 ## Usage
 
-If you want to make a specific mailer to work asynchronously just include Sidekiq::Mailer module:
+If you want to make a specific mailer to work asynchronously just include Sidekiq::RedmineMailer module:
 
     class MyMailer < ActionMailer::Base
-      include Sidekiq::Mailer
+      include Sidekiq::RedmineMailer
 
       def welcome(to)
         ...
@@ -90,7 +90,7 @@ Now every deliver you make with MyMailer will be asynchronous.
     # Queues the mail to be sent asynchronously by sidekiq
     MyMailer.welcome('your@email.com').deliver
 
-The default queue used by Sidekiq::Mailer is 'mailer'. So, in order to send mails with sidekiq you need to start a worker using:
+The default queue used by Sidekiq::RedmineMailer is 'mailer'. So, in order to send mails with sidekiq you need to start a worker using:
 
     sidekiq -q mailer
 
@@ -99,13 +99,13 @@ If you want to skip sidekiq you should use the 'deliver!' method:
     # Mail will skip sidekiq and will be sent synchronously
     MyMailer.welcome('your@email.com').deliver!
 
-By default Sidekiq::Mailer will retry to send an email if it failed. But you can [override sidekiq options](https://github.com/andersondias/sidekiq_mailer/wiki/Overriding-sidekiq-options) in your mailer.
+By default Sidekiq::RedmineMailer will retry to send an email if it failed. But you can [override sidekiq options](https://github.com/andersondias/sidekiq_mailer/wiki/Overriding-sidekiq-options) in your mailer.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'sidekiq_mailer'
+    gem 'sidekiq_redmine_mailer'
 
 And then execute:
 
@@ -113,14 +113,18 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install sidekiq_mailer
+    $ gem install sidekiq_redmine_mailer
 
 ## Testing
+
+rake test TEST=test/test_redmine_sidekiq_mailer.rb
+rake test TEST=test/test_redmine_sidekiq_mailer_redmine.rb
+
 
 Delayed e-mails is an awesome thing in production environments, but for e-mail specs/tests in testing environments it can be a mess causing specs/tests to fail because the e-mail haven't been sent directly. Therefore you can configure what environments that should be excluded like so:
 
     # config/initializers/sidekiq_mailer.rb
-    Sidekiq::Mailer.excluded_environments = [:test, :cucumber]
+    Sidekiq::RedmineMailer.excluded_environments = [:test, :cucumber]
 
 ## Contributing
 
