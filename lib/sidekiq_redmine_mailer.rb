@@ -1,9 +1,10 @@
-require 'sidekiq_mailer/version'
-require 'sidekiq_mailer/worker'
-require 'sidekiq_mailer/proxy'
+require 'sidekiq_redmine_mailer/version'
+require 'sidekiq_redmine_mailer/worker'
+require 'sidekiq_redmine_mailer/proxy'
+
 
 module Sidekiq
-  module Mailer
+  module RedmineMailer
     @@excluded_environments = nil
 
     def self.excluded_environments=(envs)
@@ -59,11 +60,34 @@ module Sidekiq
       end
 
       def method_missing(method_name, *args)
-        if action_methods.include?(method_name.to_s)
-          Sidekiq::Mailer::Proxy.new(self, method_name, *args)
+        if defined?(RedmineApp)
+          if action_methods.include?(method_name.to_s) and Sidekiq::RedmineMailer::BeforeFilter.constants.include?("#{self}".to_sym) and "Sidekiq::RedmineMailer::BeforeFilter::#{self}".constantize.method_defined?(method_name.to_s)
+            if UseSidekiqMailer.new.use_sidekiq_mailer?
+              Sidekiq::RedmineMailer::Proxy.new(self, method_name, *args)
+            else
+              super
+            end
+          else
+            super
+          end
         else
-          super
+          if action_methods.include?(method_name.to_s)
+            Sidekiq::RedmineMailer::Proxy.new(self, method_name, *args)
+          else
+            super
+          end
         end
+      end
+    end
+    module BeforeFilter
+    end
+  
+    module AfterFilter
+    end
+
+    class UseSidekiqMailer
+      def use_sidekiq_mailer?
+        true
       end
     end
   end
