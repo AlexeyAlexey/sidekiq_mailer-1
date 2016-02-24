@@ -1,10 +1,12 @@
 # Sidekiq::RedmineMailer
 
   
-## Integration with [Redmine](https://github.com/redmine/redmine) 
+## [Redmine](https://github.com/redmine/redmine) Integration
    Rewrites [sidekiq_mailer version "0.0.8"](https://github.com/andersondias/sidekiq_mailer) for redmine integration
 
-Adds to gem the ability convert args of methods to easy objects before write to queue and back after read from guegue but before send to method
+Adds the ability convert args of methods to easy objects before write to queue and back after read from guegue but before send to method
+
+If filter for converting does not exist mailer will skip sidekiq
 
 
 ### Example Redmine
@@ -85,6 +87,19 @@ If you want to make a specific mailer to work asynchronously just include Sideki
       end
     end
 
+    class Sidekiq::RedmineMailer::BeforeFilter::MyMailer
+      def welcome(args)
+        return args
+      end
+
+    end
+    #before send to method convert easy objects from queue to back 
+    class Sidekiq::RedmineMailer::AfterFilter::MyMailer
+      def welcome(params)
+        return params
+      end
+    end
+
 Now every deliver you make with MyMailer will be asynchronous.
 
     # Queues the mail to be sent asynchronously by sidekiq
@@ -121,10 +136,7 @@ rake test TEST=test/test_redmine_sidekiq_mailer.rb
 rake test TEST=test/test_redmine_sidekiq_mailer_redmine.rb
 
 
-Delayed e-mails is an awesome thing in production environments, but for e-mail specs/tests in testing environments it can be a mess causing specs/tests to fail because the e-mail haven't been sent directly. Therefore you can configure what environments that should be excluded like so:
-
-    # config/initializers/sidekiq_mailer.rb
-    Sidekiq::RedmineMailer.excluded_environments = [:test, :cucumber]
+Delayed e-mails is an awesome thing in production environments, but for e-mail specs/tests in testing environments it can be a mess causing specs/tests to fail because the e-mail haven't been sent directly
 
 ## Contributing
 
