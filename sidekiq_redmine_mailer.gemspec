@@ -4,7 +4,7 @@ require File.expand_path('../lib/sidekiq_redmine_mailer/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Alexey Kondratenko"]
   gem.email         = ["Ialexey.kondratenko@gmail.com"]
-  gem.description   = %q{Asynchronous mail delivery using sidekiq. Integration with redmine}
+  gem.description   = %q{Asynchronous mail delivery using sidekiq. Redmine Integration}
   gem.summary       = %q{Turning ActiveMailer deliveries asynchronous using the power of sidekiq}
   gem.homepage      = "http://github.com/AlexeyAlexey/sidekiq_redmine_mailer"
   gem.license       = "MIT"
