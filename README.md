@@ -1,7 +1,10 @@
 # Sidekiq::RedmineMailer
 
+(important add to development environment 
+ config.action_mailer.perform_deliveries = true)
+
   
-## [Redmine](https://github.com/redmine/redmine) Integration
+## [Redmine](https://github.com/redmine/redmine) Integration 
    Rewrites [sidekiq_mailer version "0.0.8"](https://github.com/andersondias/sidekiq_mailer) for redmine integration
 
 Adds the ability convert args of methods to easy objects before write to queue and back after read from guegue but before send to method
@@ -9,7 +12,7 @@ Adds the ability convert args of methods to easy objects before write to queue a
 If filter for converting does not exist mailer will skip sidekiq
 
 
-### Example Redmine
+### Example Redmine [Plugin Example](https://github.com/AlexeyAlexey/redmine_sidekiq_mailer/tree/develop)
 
 
     ActionDispatch::Callbacks.to_prepare do
