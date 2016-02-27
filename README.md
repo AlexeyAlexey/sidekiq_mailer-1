@@ -1,4 +1,4 @@
-# Sidekiq::RedmineMailer
+# Sidekiq::RedmineMailer (develop state but it works)
 
 (important add to development environment 
  config.action_mailer.perform_deliveries = true)
@@ -123,15 +123,11 @@ By default Sidekiq::RedmineMailer will retry to send an email if it failed. But 
 
 Add this line to your application's Gemfile:
 
-    gem 'sidekiq_redmine_mailer'
+    gem "sidekiq_redmine_mailer", :git => "https://github.com/AlexeyAlexey/sidekiq_redmine_mailer"
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install sidekiq_redmine_mailer
 
 ## Testing
 
